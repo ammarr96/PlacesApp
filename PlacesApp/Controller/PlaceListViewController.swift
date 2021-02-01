@@ -36,10 +36,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         PlacesManager.getPlaces(longitude: userLocation.longitude!, latitude: userLocation.latitude!, radius: 2000) { (result) in
             switch result {
             case .success(let data):
-                print(data)
                 self.places = data
                 self.placesTableView.reloadData()
-                print(self.places.count)
                 break
                 
             case .failure(let err):

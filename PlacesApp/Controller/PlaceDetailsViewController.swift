@@ -34,7 +34,6 @@ class PlaceDetailsViewController: UIViewController, MKMapViewDelegate {
         PlacesManager.getPlacedetails(placeId: placeId!) { (result) in
             switch result {
             case .success(let data):
-                print(data)
                 self.placeDetails = data
                 self.showData()
                 break
@@ -50,8 +49,33 @@ class PlaceDetailsViewController: UIViewController, MKMapViewDelegate {
     func showData() {
         title = placeDetails?.name
         addressLabel.text = placeDetails?.address ?? "-"
+        
+        var rating = 0
         if (placeDetails?.rating != nil) {
-            ratingLabel.text = "\(placeDetails?.rating ?? 0.0)"
+            let imageSize: CGFloat = 20.0
+            rating = (Int) (placeDetails?.rating ?? 0.0)
+            let imageAttachment = NSTextAttachment()
+            imageAttachment.image = UIImage(named:"star_selected")
+            let imageOffsetY: CGFloat = -5.0
+            imageAttachment.bounds = CGRect(x: 0, y: imageOffsetY, width: imageSize, height: imageSize)
+            let attachmentString = NSAttributedString(attachment: imageAttachment)
+            let completeText = NSMutableAttributedString(string: "")
+            for i in 1...rating {
+                completeText.append(attachmentString)
+                completeText.append(NSAttributedString(string: " "))
+            }
+            let imageAttachment2 = NSTextAttachment()
+            imageAttachment2.image = UIImage(named:"star")
+            imageAttachment2.bounds = CGRect(x: 0, y: imageOffsetY, width: imageSize, height: imageSize)
+            let attachmentString2 = NSAttributedString(attachment: imageAttachment2)
+            if (rating<5) {
+                for i in 1...5-rating {
+                    completeText.append(attachmentString2)
+                    completeText.append(NSAttributedString(string: " "))
+                }
+            }
+        //ratingLabel.text = "\(placeDetails?.rating ?? 0.0)"
+            ratingLabel.attributedText = completeText
         }
         else {
             ratingLabel.text = "-"
